@@ -1,23 +1,28 @@
 
 import { posts } from "@/utils/data";
 import { IUpdatePostDTO } from "@/utils/dto";
+import { prisma } from "@/utils/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
 //Get Single Post
 
 export const GET = async (request : NextRequest , {params} : { params : Promise<{id : string}> } ) => {
 
-const resolvedParams = await params ;
+try{
+    const resolvedParams = await params ;
 
 const postId = parseInt (resolvedParams.id) ;
 
-const post =  posts.find((p) => p.id === postId )
+const post =  await prisma.post.findUnique({ where : { id : postId } })
 
 if(!post) {
     return NextResponse.json({massage : "Post Not Found"} , {status : 404}) ; }
 
- return NextResponse.json( post , { status : 200 }) ;   
-}
+ return NextResponse.json( post , { status : 200 }) ;  
+} catch(error){
+    return NextResponse.json({message:"internal server error"} , {status:500});
+};
+};
 
 //PUT Meth
 

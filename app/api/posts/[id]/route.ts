@@ -11,7 +11,7 @@ export const GET = async (request : NextRequest , {params} : { params : Promise<
 try{
     const resolvedParams = await params ;
 
-const postId = parseInt (resolvedParams.id) ;
+const postId = parseInt(resolvedParams.id) ;
 
 const post =  await prisma.post.findUnique({ where : { id : postId } })
 
@@ -20,6 +20,7 @@ if(!post) {
 
  return NextResponse.json( post , { status : 200 }) ;  
 } catch(error){
+    console.error(error)
     return NextResponse.json({message:"internal server error"} , {status:500});
 };
 };
@@ -28,33 +29,46 @@ if(!post) {
 
 export const PUT = async (request : NextRequest , {params} : { params : Promise<{id : string}> } ) => {
 
-const resolvedParams = await params ;
+try{
+    const resolvedParams = await params ;
 
 const postId = parseInt (resolvedParams.id) ;
 
-const post =  posts.find((p) => p.id === postId )
+const post = await prisma.post.findUnique({where : { id : postId }  })
 
 const data = (await request.json()) as IUpdatePostDTO ; 
 
 if(!post) {
     return NextResponse.json({massage : "Post Not Found"} , {status : 404}) ; }
 
- return NextResponse.json( {massage : "post updated"} , { status : 200 }) ;   
-}
+    const postUpdated = await prisma.post.update({where : { id : postId },
+        data : {
+          title : data.title ,
+          content : data.content  
+        }
+     })
+
+ return NextResponse.json( postUpdated , { status : 200 }) ;   
+}catch(error){
+    console.error(error) ;
+    return NextResponse.json({message : "internal server error"} , {status : 500} ) ;} ;}
 
 
 //Delete Method
 export const DELETE = async (request : NextRequest , {params} : { params : Promise<{id : string}> } ) => {
 
-const resolvedParams = await params ;
+try{
+    const resolvedParams = await params ;
 
 const postId = parseInt (resolvedParams.id) ;
 
-const post =  posts.find((p) => p.id === postId )
+const post =  await prisma.post.delete({where : { id : postId }  })
 
 
 if(!post) {
     return NextResponse.json({massage : "Post Not Found"} , {status : 404}) ; }
 
- return NextResponse.json( {massage : "post deleted successfully"} , { status : 200 }) ;   
-}
+ return NextResponse.json( {massage : "post deleted successfully"} , { status : 200 }) ;
+}   catch(error){
+    console.error(error) ;
+    return NextResponse.json({ message : " internal server error " } ,  {status : 500} ) ;} ;}

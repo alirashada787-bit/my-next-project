@@ -9,7 +9,13 @@ interface IUpdatePostDTO
 {
 
    title? : string ,
-   body? : string ,
+   content? : string ,
 }
 
-export type {ICreatePostDTO , IUpdatePostDTO } ;
+interface IRegisterUserDto{
+   username : string ,
+   email : string ,
+   password : string 
+}
+
+export type {ICreatePostDTO , IUpdatePostDTO , IRegisterUserDto } ;

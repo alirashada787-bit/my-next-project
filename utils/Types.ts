@@ -4,6 +4,12 @@ type TPost = {
   id : number ,
   title : string ,
   body : string ,
-}
+} ;
 
-export type  { TPost }
+type TUserPayload = {
+    id: number;
+    username: string;
+    isAdmin: boolean;
+} ;
+
+export type  { TPost , TUserPayload }

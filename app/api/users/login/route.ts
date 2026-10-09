@@ -6,6 +6,8 @@ import z from "zod" ;
 
 import bcrypt from 'bcrypt';
 
+import { generateToken } from "@/utils/generateToken";
+
 export const POST = async (request : NextRequest ) => {
   try{
     const body = ( await  request.json()) as ILoginUserDto ;
@@ -28,8 +30,15 @@ if(!user){
 
  if(!isPasswordMatch){
     return NextResponse.json({message:" Invalid Password Or Email"} , {status:400}) ; }
+
 // token processing
-const token = null ;
+
+const userPayload = {
+    id : user.id ,
+    username : user.username , 
+    isAdmin : user.isAdmin  } ;
+
+const token = generateToken(userPayload) ;
 
    return NextResponse.json({message:"Authenticated" , token } , {status:200}); 
 

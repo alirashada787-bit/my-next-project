@@ -5,6 +5,7 @@ import { NextResponse , NextRequest } from "next/server";
 import z from "zod" ;
 
 import bcrypt from 'bcrypt';
+import { generateToken } from "@/utils/generateToken";
 
 export const POST = async ( request : NextRequest ,  ) => {
     try{
@@ -45,12 +46,17 @@ password : z.string().min(10)
             id : true ,
             username : true ,
             email : true ,
-            isAdmin : true
-        }
-        
-        });
+            isAdmin : true } });
 
-            return NextResponse.json( newUserData , {status : 201} ) ;
+const userPayload = {
+   id : newUserData.id ,
+   username : newUserData.username ,
+   isAdmin : newUserData.isAdmin 
+}
+
+const token = generateToken(userPayload)
+
+            return NextResponse.json( {...newUserData , token } , {status : 201} ) ;
 
     }catch(error){
         console.error(error)

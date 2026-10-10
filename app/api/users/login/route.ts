@@ -6,7 +6,8 @@ import z from "zod" ;
 
 import bcrypt from 'bcrypt';
 
-import { generateToken } from "@/utils/generateToken";
+import {setCookie} from "@/utils/generateToken";
+
 
 export const POST = async (request : NextRequest ) => {
   try{
@@ -38,9 +39,9 @@ const userPayload = {
     username : user.username , 
     isAdmin : user.isAdmin  } ;
 
-const token = generateToken(userPayload) ;
+const cookie = setCookie(userPayload)
 
-   return NextResponse.json({message:"Authenticated" , token } , {status:200}); 
+   return NextResponse.json({message:"Authenticated"} , {status:200 , headers : { "Set-Cookie" : cookie }}); 
 
  }catch(error){
     console.error(error) ;

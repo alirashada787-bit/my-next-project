@@ -5,7 +5,7 @@ import { NextResponse , NextRequest } from "next/server";
 import z from "zod" ;
 
 import bcrypt from 'bcrypt';
-import { generateToken } from "@/utils/generateToken";
+import {setCookie } from "@/utils/generateToken";
 
 export const POST = async ( request : NextRequest ,  ) => {
     try{
@@ -54,9 +54,9 @@ const userPayload = {
    isAdmin : newUserData.isAdmin 
 }
 
-const token = generateToken(userPayload)
+const cookie = setCookie(userPayload) ;
 
-            return NextResponse.json( {...newUserData , token } , {status : 201} ) ;
+            return NextResponse.json( {newUserData} , {status : 201 ,headers:{"SET-COOKIE": cookie}});
 
     }catch(error){
         console.error(error)

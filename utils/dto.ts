@@ -23,4 +23,10 @@ interface ILoginUserDto{
    password : string 
 }
 
-export type {ICreatePostDTO , IUpdatePostDTO , IRegisterUserDto , ILoginUserDto } ;
+interface IUpdateUserDto {
+   username? : string ,
+   email? : string ,
+   password : string
+}
+
+export type {ICreatePostDTO , IUpdatePostDTO , IRegisterUserDto , ILoginUserDto , IUpdateUserDto } ;
